@@ -11,4 +11,6 @@ public class TestDataObject {
     private long id;
     @Column
     private String username;
+    @Column
+    private String deneme;
 }
