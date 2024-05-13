@@ -1,9 +1,9 @@
 package com.ecommerce.ecommercebackend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "web_order")
@@ -11,6 +11,41 @@ public class WebOrder {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private LocalUser user;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<WebOrderQuantities> quantities = new ArrayList<>();
+
+    public List<WebOrderQuantities> getQuantities() {
+        return quantities;
+    }
+
+    public void setQuantities(List<WebOrderQuantities> quantities) {
+        this.quantities = quantities;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public LocalUser getUser() {
+        return user;
+    }
+
+    public void setUser(LocalUser user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;

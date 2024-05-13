@@ -3,7 +3,7 @@ package com.ecommerce.ecommercebackend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "ınventory")
+@Table(name = "inventory")
 public class Inventory {
     @Id
     @Column(name = "id", nullable = false)
