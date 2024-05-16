@@ -12,6 +12,8 @@ public class Inventory {
     @OneToOne(optional = false, orphanRemoval = true)
     @JoinColumn(name = "product_id", nullable = false, unique = true)
     private Product product;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 
     public Product getProduct() {
         return product;
