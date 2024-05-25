@@ -1,11 +1,6 @@
--- Script to insert dummy dev data into the database.
-
--- You first need to register two users into the system before running this scirpt.
-
--- Replace the id here with the first user id you want to have ownership of the orders.
-SET @userId1 := 8;
--- Replace the id here with the second user id you want to have ownership of the orders.
-SET @userId2 := 9;
+-- Ensure the user IDs are set correctly
+SET @userId1 = 8;
+SET @userId2 = 9;
 
 DELETE FROM web_order_quantities;
 DELETE FROM web_order;
@@ -19,18 +14,11 @@ INSERT INTO product (name, short_description, long_description, price) VALUES ('
 INSERT INTO product (name, short_description, long_description, price) VALUES ('Product #4', 'Product four short description.', 'This is a very long description of product #4.', 15.69);
 INSERT INTO product (name, short_description, long_description, price) VALUES ('Product #5', 'Product five short description.', 'This is a very long description of product #5.', 42.59);
 
-SET @product1 := NULL;
-SET @product2 := NULL;
-SET @product3 := NULL;
-SET @product4 := NULL;
-SET @product5 := NULL;
-
-
-SELECT @product1 = id FROM product WHERE name = 'Product #1';
-SELECT @product2 = id FROM product WHERE name = 'Product #2';
-SELECT @product3 = id FROM product WHERE name = 'Product #3';
-SELECT @product4 = id FROM product WHERE name = 'Product #4';
-SELECT @product5 = id FROM product WHERE name = 'Product #5';
+SET @product1 = (SELECT id FROM product WHERE name = 'Product #1' LIMIT 1);
+SET @product2 = (SELECT id FROM product WHERE name = 'Product #2' LIMIT 1);
+SET @product3 = (SELECT id FROM product WHERE name = 'Product #3' LIMIT 1);
+SET @product4 = (SELECT id FROM product WHERE name = 'Product #4' LIMIT 1);
+SET @product5 = (SELECT id FROM product WHERE name = 'Product #5' LIMIT 1);
 
 INSERT INTO inventory (product_id, quantity) VALUES (@product1, 5);
 INSERT INTO inventory (product_id, quantity) VALUES (@product2, 8);
@@ -41,12 +29,8 @@ INSERT INTO inventory (product_id, quantity) VALUES (@product5, 2);
 INSERT INTO address (address_line_1, city, country, user_id) VALUES ('123 Tester Hill', 'Testerton', 'England', @userId1);
 INSERT INTO address (address_line_1, city, country, user_id) VALUES ('312 Spring Boot', 'Hibernate', 'England', @userId2);
 
-SET @address1 := NULL;
-SET @address2 := NULL;
-
-SELECT id INTO @address1 FROM address WHERE user_id = @userId1 ORDER BY id DESC LIMIT 1;
-SELECT id INTO @address2 FROM address WHERE user_id = @userId2 ORDER BY id DESC LIMIT 1;
-
+SET @address1 = (SELECT id FROM address WHERE user_id = @userId1 ORDER BY id DESC LIMIT 1);
+SET @address2 = (SELECT id FROM address WHERE user_id = @userId2 ORDER BY id DESC LIMIT 1);
 
 INSERT INTO web_order (address_id, user_id) VALUES (@address1, @userId1);
 INSERT INTO web_order (address_id, user_id) VALUES (@address1, @userId1);
@@ -54,17 +38,11 @@ INSERT INTO web_order (address_id, user_id) VALUES (@address1, @userId1);
 INSERT INTO web_order (address_id, user_id) VALUES (@address2, @userId2);
 INSERT INTO web_order (address_id, user_id) VALUES (@address2, @userId2);
 
-SET @order1 := NULL;
-SET @order2 := NULL;
-SET @order3 := NULL;
-SET @order4 := NULL;
-SET @order5 := NULL;
-
-SELECT id INTO @order1 FROM web_order WHERE address_id = @address1 AND user_id = @userId1 ORDER BY id DESC LIMIT 1;
-SELECT id INTO @order2 FROM web_order WHERE address_id = @address1 AND user_id = @userId1 ORDER BY id DESC LIMIT 1 OFFSET 1;
-SELECT id INTO @order3 FROM web_order WHERE address_id = @address1 AND user_id = @userId1 ORDER BY id DESC LIMIT 1 OFFSET 2;
-SELECT id INTO @order4 FROM web_order WHERE address_id = @address2 AND user_id = @userId2 ORDER BY id DESC LIMIT 1;
-SELECT id INTO @order5 FROM web_order WHERE address_id = @address2 AND user_id = @userId2 ORDER BY id DESC LIMIT 1 OFFSET 1;
+SET @order1 = (SELECT id FROM web_order WHERE address_id = @address1 AND user_id = @userId1 ORDER BY id DESC LIMIT 1);
+SET @order2 = (SELECT id FROM web_order WHERE address_id = @address1 AND user_id = @userId1 ORDER BY id DESC LIMIT 1 OFFSET 1);
+SET @order3 = (SELECT id FROM web_order WHERE address_id = @address1 AND user_id = @userId1 ORDER BY id DESC LIMIT 1 OFFSET 2);
+SET @order4 = (SELECT id FROM web_order WHERE address_id = @address2 AND user_id = @userId2 ORDER BY id DESC LIMIT 1);
+SET @order5 = (SELECT id FROM web_order WHERE address_id = @address2 AND user_id = @userId2 ORDER BY id DESC LIMIT 1 OFFSET 1);
 
 INSERT INTO web_order_quantities (order_id, product_id, quantity) VALUES (@order1, @product1, 5);
 INSERT INTO web_order_quantities (order_id, product_id, quantity) VALUES (@order1, @product2, 5);
